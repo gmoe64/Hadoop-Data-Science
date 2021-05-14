@@ -23,7 +23,7 @@ Example:  joined.select( "SalePrice", "PropertyType", "ZipCode", "City","SqFtFin
 -------------------------
 Design Decisions & Issues
 -------------------------
-I selected the data set house-prices. Currently i'm looking for a home with the following requirements:
+I selected the data set house-prices. I'm currently in the market looking to purchase a newhome with the following requirements:
 
 
 Q. Sale price must be under $450000
