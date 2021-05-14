@@ -7,12 +7,6 @@ Command Line Arguments
 
     Example:  joined.select( "SalePrice", "PropertyType", "ZipCode", "City","SqFtFinBasement").filter(price_tb1.lt("450000") && basement.gt("0") && type_tb1.notEqual("Townhouse")                &&  city_tb1.equalTo("Renton")).orderBy(desc("SalePrice")).show 
 
-
--price_tb1.lt("450000")
--basement.gt("0")
--type_tb1.notEqual("Townhouse")
--city_tb1.equalTo("Renton")
-
   (required) Specifies the housing sales price, type and location in 
   a specific area in Washington state.
 
