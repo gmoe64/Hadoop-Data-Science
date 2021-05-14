@@ -10,10 +10,10 @@ Command Line Arguments
   (required) Specifies the housing sales price, type and location in 
   a specific area in Washington state.
 
-    -price_tb1 - Housing sale price variable 
-    -basement - Housing basement size variable
-    -type_tb1 - Housing style/type variable 
-    -city_tb1 - variable create from zipcode and table join
+    -price_tb1.lt("450000") - Housing sale price variable 
+    -basement.gt("0") - Housing basement size variable
+    -type_tb1.notEqual("Townhouse") - Housing style/type variable 
+    -city_tb1.equalTo("Renton") - variable create from zipcode and table join
 
 -------------------------
 Design Decisions & Issues
