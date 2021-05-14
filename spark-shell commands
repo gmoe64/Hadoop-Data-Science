@@ -216,7 +216,7 @@ scala> val housePQ = spark.read.parquet("./housePQ")
 scala> housePQ.groupBy("ZipCode").count().orderBy("count", ascending=False).show()
 
 
-/////// Create zipcode enricment table //////
+/////// Create zipcode enricment table to get city names //////
 
 scala> val zipcodeDF = spark.read.format("csv").option("header", "true").load("/data/house-prices/zipcode.csv")
 
@@ -244,6 +244,9 @@ scala> zipcode.show
 |98072|    Woodinville|
 |98050|        Preston|
 +-----+---------------+
+
+scala> val city_tb1 = joined("City")
+city_tb1: org.apache.spark.sql.Column = City
 
 ////////////////////////
 
