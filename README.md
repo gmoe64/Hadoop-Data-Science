@@ -29,12 +29,12 @@ I selected the data set house-prices. I'm currently in the market looking to pur
 Q. Sale price must be under $450000
 A. val price_tb1 = houseDF("SalePrice") 
   
-Q. Zipcode within a specific area,
+Q. Housing must have zipcode within a specific area
 A. val city_tb1 = joined("City") - In order to accomplish this i had to join a table i created cross referencing zip with actually city names.
 
-Q. Must not be a Townhouse
+Q. I would like to exclude townhouse from my search
 A. val type_tb1 = houseDF("PropertyType") - I used this variable to avoid townhouses 
 
-Q. House has to have a basement for my mancave!!!!
+Q. House must has a basement for additional square footage
 A. val basement = houseDF("SqFtFinBasement") - If basement square feet is greater than 0, the house has a basement
 
