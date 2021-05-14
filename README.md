@@ -1,5 +1,5 @@
 # Hadoop-Data-Science
-Exercises for manipulating, analyzing and performing computations on Hadoop Big Data.
+Exercises for manipulating, analyzing and performing computations on house-prices Big Data in Hadoop/Spark.
 
 ----------------------
 Command Line Arguments
@@ -18,7 +18,7 @@ Command Line Arguments
 -------------------------
 Design Decisions & Issues
 -------------------------
-I selected the data set house-prices. I'm currently in the market looking to purchase a newhome with the following requirements:
+I'm currently in the market searching to purchase a new home with the following requirements:
 
 
 Q. Sale price must be under $450000
