@@ -254,7 +254,8 @@ joined: org.apache.spark.sql.DataFrame = [DocumentID: string, Date: string ... 2
 scala> val joined_2 = houseDF_2.join(zipcodeDF,  houseDF_2("ZipCode") === zipcodeDF("Zip"))
 joined_2: org.apache.spark.sql.DataFrame = [ID: string, Date: string ... 11 more fields]
 
-
+scala> val basement = houseDF("SqFtFinBasement")
+basement: org.apache.spark.sql.Column = SqFtFinBasement
 
 joined.select( "SalePrice", "PropertyType", "ZipCode", "City","SqFtFinBasement").filter(price_tb1.lt("450000") && basement.gt("0") && type_tb1.notEqual("Townhouse") &&  city_tb1.equalTo("Renton")).orderBy(desc("SalePrice")).show
 
