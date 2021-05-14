@@ -1,1 +1,285 @@
+//Location of the data set
 
+/data/house-prices/house-sales-full.csv                   
+
+scala> val houseDF = spark.read.format("csv").option("header", "true").load("/data/house-prices/house-sales-full.csv")  /// date set has alot of info...
+
+scala> val houseDF_2 = spark.read.format("csv").option("header", "true").load("/data/house-prices/house-sales-simplified.csv")
+
+//Print the schema of data frame
+scala> houseDF.printSchemaroot
+
+ |-- DocumentID: string (nullable = true)
+ |-- Date: string (nullable = true)
+ |-- SalePrice: string (nullable = true)
+ |-- PropertyID: string (nullable = true)
+ |-- PropertyType: string (nullable = true)
+ |-- ym: string (nullable = true)
+ |-- zhvi_px: string (nullable = true)
+ |-- zhvi_idx: string (nullable = true)
+ |-- AdjSalePrice: string (nullable = true)
+ |-- NbrLivingUnits: string (nullable = true)
+ |-- SqFtLot: string (nullable = true)
+ |-- SqFtTotLiving: string (nullable = true)
+ |-- SqFtFinBasement: string (nullable = true)
+ |-- Bathrooms: string (nullable = true)
+ |-- Bedrooms: string (nullable = true)
+ |-- BldgGrade: string (nullable = true)
+ |-- YrBuilt: string (nullable = true)
+ |-- YrRenovated: string (nullable = true)
+ |-- TrafficNoise: string (nullable = true)
+ |-- LandVal: string (nullable = true)
+ |-- ImpsVal: string (nullable = true)
+ |-- ZipCode: string (nullable = true)
+ |-- NewConstruction: string (nullable = true)
+
+scala> houseDF_2.show
+
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+| ID|    Date|SalePrice|PropertyID| PropertyType|Bedrooms|Bathrooms|SqFtTotLiving|SqFtLot|YrBuilt|ZipCode|
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+|  1| 9/16/14|   280000|   1000102|    Multiplex|       6|        3|         2400|   9373|   1991|  98002|
+|  2| 6/16/06|  1000000|   1200013|Single Family|       4|     3.75|         3764|  20156|   2005|  98166|
+|  3| 1/29/07|   745000|   1200019|Single Family|       4|     1.75|         2060|  26036|   1947|  98166|
+|  4| 2/25/08|   425000|   2800016|Single Family|       5|     3.75|         3200|   8618|   1966|  98168|
+|  5| 3/29/13|   240000|   2800024|Single Family|       4|     1.75|         1720|   8620|   1948|  98168|
+|  6| 3/30/09|   349900|   3600090|    Townhouse|       2|      1.5|          930|   1012|   2008|  98144|
+|  7| 8/28/13|   327500|   3800004|Single Family|       3|      1.5|         1750|  34465|   1961|  98178|
+|  8| 5/24/07|   347000|   3800009|Single Family|       4|     1.75|         1860|  14659|   1963|  98178|
+|  9| 9/22/06|   220400|   6600055|Single Family|       2|        1|          990|   5324|   1930|  98032|
+| 10| 8/22/06|   437500|   7200080|    Multiplex|       4|        2|         1980|  10585|   1924|  98055|
+| 11|10/16/14|   150000|   7200179|Single Family|       2|        1|          840|  12750|   1925|  98055|
+| 12| 1/14/10|   300000|   7400054|Single Family|       3|        1|         1750|   5200|   1958|  98118|
+| 13| 6/26/08|   292000|   7400062|Single Family|       2|        1|          790|   5240|   1925|  98118|
+| 14| 5/21/14|   299800|   7400062|Single Family|       2|        1|          790|   5240|   1925|  98118|
+| 15| 6/13/13|   370000|   7600065|    Townhouse|       3|     2.25|         1530|   1245|   2014|     -1|
+| 16| 9/25/06|   605000|   7600093|Single Family|       3|     2.75|         2120|   7320|   1901|  98122|
+| 17|  5/4/07|   475000|   7600136|    Townhouse|       2|        2|         1130|   1148|   2007|     -1|
+| 18| 2/24/07|   425000|   7600203|Single Family|       4|      1.5|         2620|   3485|   1920|  98122|
+| 19| 3/26/08|   357500|   7600218|    Townhouse|       2|      1.5|         1250|    924|   2007|     -1|
+| 20| 3/14/06|   455000|   9000210|Single Family|       3|     1.75|         1500|   5253|   1919|  98115|
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+only showing top 20 rows
+
+scala> houseDF.select("SalePrice").show()
+
++---------+
+|SalePrice|
++---------+
+|   280000|
+|  1000000|
+|   745000|
+|   425000|
+|   240000|
+|   349900|
+|   327500|
+|   347000|
+|   220400|
+|   437500|
+|   150000|
+|   300000|
+|   292000|
+|   299800|
+|   370000|
+|   605000|
+|   475000|
+|   425000|
+|   357500|
+|   455000|
++---------+
+only showing top 20 rows
+
+scala> val price_tb1 = houseDF("SalePrice")
+price_tb1: org.apache.spark.sql.Column = SalePrice
+
+scala> val price_tb2 = houseDF_2("SalePrice")
+price_tb2: org.apache.spark.sql.Column = SalePrice
+
+scala> houseDF_2.filter(price_tb2.lt("300000")).show()
+
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+| ID|    Date|SalePrice|PropertyID| PropertyType|Bedrooms|Bathrooms|SqFtTotLiving|SqFtLot|YrBuilt|ZipCode|
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+|  1| 9/16/14|   280000|   1000102|    Multiplex|       6|        3|         2400|   9373|   1991|  98002|
+|  5| 3/29/13|   240000|   2800024|Single Family|       4|     1.75|         1720|   8620|   1948|  98168|
+|  9| 9/22/06|   220400|   6600055|Single Family|       2|        1|          990|   5324|   1930|  98032|
+| 11|10/16/14|   150000|   7200179|Single Family|       2|        1|          840|  12750|   1925|  98055|
+| 13| 6/26/08|   292000|   7400062|Single Family|       2|        1|          790|   5240|   1925|  98118|
+| 14| 5/21/14|   299800|   7400062|Single Family|       2|        1|          790|   5240|   1925|  98118|
+| 22|  6/5/13|   279500|  11000040|Single Family|       3|        3|         3020|  27229|   2000|  98001|
+| 43|12/16/11|   222300|  11900050|Single Family|       3|      2.5|         1850|   4500|   2004|  98042|
+| 46|  5/9/14|   254000|  11900140|Single Family|       3|      2.5|         1850|   4597|   2003|  98042|
+| 47| 1/18/07|   279950|  13001225|Single Family|       3|        1|          920|   5085|   1954|  98108|
+| 49| 1/27/10|   220000|  13002422|Single Family|       3|      2.5|         1480|   2550|   2007|     -1|
+| 50| 1/26/06|   259000|  16000460|Single Family|       3|        1|         1190|   5635|   1922|  98002|
+| 51|  4/4/06|   212000|  16000500|Single Family|       3|        1|         1290|   4543|   1951|  98002|
+| 70| 8/25/11|   240000|  34001865|Single Family|       2|        1|          760|   4320|   1941|  98136|
+| 72|  7/9/10|   289950|  37000560|Single Family|       3|     1.75|         1180|   5320|   1968|  98126|
+| 73| 6/12/06|   283000|  40000006|Single Family|       3|     1.75|         1130|   8631|   1955|  98168|
+| 75|  5/6/14|    78000|  40000362|Single Family|       2|        1|          780|  16344|   1942|  98168|
+| 77| 8/16/06|   289000|  40000517|Single Family|       4|        2|         2100|   7920|   1967|  98168|
+| 78|  5/9/08|   235000|  40000553|Single Family|       2|        1|         1400|  19570|   1929|  98168|
+| 79| 11/3/06|   200000|  40000961|Single Family|       1|        1|          700|   8140|   1943|  98168|
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+only showing top 20 rows
+
+scala> houseDF_2.filter(price_tb2.gt("300000")).show()
+
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+| ID|    Date|SalePrice|PropertyID| PropertyType|Bedrooms|Bathrooms|SqFtTotLiving|SqFtLot|YrBuilt|ZipCode|
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+|  3| 1/29/07|   745000|   1200019|Single Family|       4|     1.75|         2060|  26036|   1947|  98166|
+|  4| 2/25/08|   425000|   2800016|Single Family|       5|     3.75|         3200|   8618|   1966|  98168|
+|  6| 3/30/09|   349900|   3600090|    Townhouse|       2|      1.5|          930|   1012|   2008|  98144|
+|  7| 8/28/13|   327500|   3800004|Single Family|       3|      1.5|         1750|  34465|   1961|  98178|
+|  8| 5/24/07|   347000|   3800009|Single Family|       4|     1.75|         1860|  14659|   1963|  98178|
+| 10| 8/22/06|   437500|   7200080|    Multiplex|       4|        2|         1980|  10585|   1924|  98055|
+| 15| 6/13/13|   370000|   7600065|    Townhouse|       3|     2.25|         1530|   1245|   2014|     -1|
+| 16| 9/25/06|   605000|   7600093|Single Family|       3|     2.75|         2120|   7320|   1901|  98122|
+| 17|  5/4/07|   475000|   7600136|    Townhouse|       2|        2|         1130|   1148|   2007|     -1|
+| 18| 2/24/07|   425000|   7600203|Single Family|       4|      1.5|         2620|   3485|   1920|  98122|
+| 19| 3/26/08|   357500|   7600218|    Townhouse|       2|      1.5|         1250|    924|   2007|     -1|
+| 20| 3/14/06|   455000|   9000210|Single Family|       3|     1.75|         1500|   5253|   1919|  98115|
+| 21| 11/9/07|   495000|  10000060|Single Family|       3|     2.25|         2070|   4600|   1909|  98116|
+| 23| 3/20/08|   400000|  11000041|Single Family|       4|        2|         2370|  24034|   1960|  98001|
+| 24|11/21/07|   530500|  11200070|Single Family|       3|      2.5|         1530|   3296|   1998|  98007|
+| 25| 8/28/06|   490000|  11200370|Single Family|       3|      2.5|         1530|   3696|   1998|  98007|
+| 26| 9/12/12|   608000|  11500050|Single Family|       3|      2.5|         2780|  13349|   1990|  98052|
+| 27|  9/2/08|   630000|  11500270|Single Family|       3|      2.5|         2420|   8186|   1992|  98052|
+| 28| 4/21/08|   635000|  11500510|Single Family|       4|      2.5|         2280|   9093|   1990|  98052|
+| 29| 8/25/09|   520000|  11500510|Single Family|       4|      2.5|         2280|   9093|   1990|  98052|
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+only showing top 20 rows
+
+scala> houseDF_2.filter(houseDF_2("ZipCode")==="98053").show
+
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+| ID|    Date|SalePrice|PropertyID| PropertyType|Bedrooms|Bathrooms|SqFtTotLiving|SqFtLot|YrBuilt|ZipCode|
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+|331| 3/27/12|  1692000| 125069038|Single Family|       4|     3.75|         5150| 963702|   1997|  98053|
+|471|10/23/07|  1100000| 203100195|Single Family|       3|      2.5|         1900|  11216|   1996|  98053|
+|472|  3/3/11|   335000| 203100845|Single Family|       3|     1.75|         1660|  18009|   1980|  98053|
+|473| 4/24/06|   450000| 203101045|Single Family|       4|     2.75|         2780|  20794|   1977|  98053|
+|474| 7/10/06|   366000| 203101210|Single Family|       2|        1|         1640|  17335|   1978|  98053|
+|475|12/12/07|   345000| 203101210|Single Family|       2|        1|         1640|  17335|   1978|  98053|
+|476|  3/7/07|   735000| 203101240|Single Family|       4|      2.5|         3270|  21270|   2007|  98053|
+|477|  4/7/11|   407000| 203101330|Single Family|       3|     2.25|         2440|  47916|   1991|  98053|
+|478| 8/10/09|   464990| 203101410|Single Family|       3|      2.5|         2439|  23435|   1999|  98053|
+|479|12/13/13|   150000| 203101530|Single Family|       2|        2|         1540|  54450|   1983|  98053|
+|489| 2/28/08|   463500| 203900320|Single Family|       3|      2.5|         2120|  15297|   2007|  98053|
+|490| 10/3/07|   374950| 203900920|Single Family|       3|        2|         1130|   9879|   1996|  98053|
+|491| 3/16/10|   260000| 203900920|Single Family|       3|        2|         1130|   9879|   1996|  98053|
+|492| 5/21/07|   380000| 204000175|Single Family|       3|        2|         1680|   8946|   1996|  98053|
+|493| 6/22/10|   439000| 205000010|Single Family|       4|      2.5|         2450|  55387|   1994|  98053|
+|494| 5/14/10|   495000| 205000170|Single Family|       3|      2.5|         1930|  24904|   1994|  98053|
+|495|10/14/13|   650000| 205000190|Single Family|       4|      2.5|         2980|  24703|   1993|  98053|
+|496| 4/22/10|   529900| 205000240|Single Family|       3|      2.5|         2330|  33881|   1994|  98053|
+|497| 3/20/13|   540000| 205000410|Single Family|       3|      2.5|         2320|  32772|   1992|  98053|
+|498|10/23/07|   662500| 205000450|Single Family|       4|      2.5|         2470|  33305|   1993|  98053|
++---+--------+---------+----------+-------------+--------+---------+-------------+-------+-------+-------+
+only showing top 20 rows
+
+scala> houseDF_2.select("PropertyID").distinct.show
+
++----------+
+|PropertyID|
++----------+
+|  11900010|
+| 139000130|
+| 148000072|
+| 191101115|
+| 200350070|
+| 203101210|
+| 318300070|
+| 425069112|
+| 522059158|
+| 622079002|
+| 686200450|
+| 705700970|
+| 723049156|
+| 826059062|
+| 868002282|
+| 917000300|
+| 952000495|
+| 993002086|
+|1025049260|
+|1087500040|
++----------+
+only showing top 20 rows
+
+//// Change the file format to parquet 
+
+scala> houseDF.write.parquet("housePQ")
+
+scala> val housePQ = spark.read.parquet("./housePQ")
+
+scala> housePQ.groupBy("ZipCode").count().orderBy("count", ascending=False).show()
+
+
+/////// Create zipcode enricment table //////
+
+scala> val zipcodeDF = spark.read.format("csv").option("header", "true").load("/data/house-prices/zipcode.csv")
+
+scala> zipcode.show
++-----+---------------+
+|  Zip|           City|
++-----+---------------+
+|98011|        Bothell|
+|98057|         Renton|
+|98144|        Seattle|
+|98014|  Pleasant Hill|
+|98109|        Seattle|
+|98033|       Kirkland|
+|98008|       Bellevue|
+|98058|         Renton|
+|98068|Snoqualmie Pass|
+|98118|        Seattle|
+|98023|    Federal Way|
+|98051|     Ravensdale|
+|98005|       Bellevue|
+|98031|           Kent|
+|98010|  Black Diamond|
+|98113|        Seattle|
+|98117|        Seattle|
+|98072|    Woodinville|
+|98050|        Preston|
++-----+---------------+
+
+////////////////////////
+
+
+scala> val joined = houseDF.join(zipcodeDF,  houseDF("ZipCode") === zipcodeDF("Zip"))
+joined: org.apache.spark.sql.DataFrame = [DocumentID: string, Date: string ... 23 more fields]
+
+scala> val joined_2 = houseDF_2.join(zipcodeDF,  houseDF_2("ZipCode") === zipcodeDF("Zip"))
+joined_2: org.apache.spark.sql.DataFrame = [ID: string, Date: string ... 11 more fields]
+
+
+
+joined.select( "SalePrice", "PropertyType", "ZipCode", "City","SqFtFinBasement").filter(price_tb1.lt("450000") && basement.gt("0") && type_tb1.notEqual("Townhouse") &&  city_tb1.equalTo("Renton")).orderBy(desc("SalePrice")).show
+
++---------+-------------+-------+------+---------------+
+|SalePrice| PropertyType|ZipCode|  City|SqFtFinBasement|
++---------+-------------+-------+------+---------------+
+|   439950|Single Family|  98058|Renton|            420|
+|   434000|Single Family|  98058|Renton|            580|
+|   420000|Single Family|  98058|Renton|           1020|
+|   412000|Single Family|  98058|Renton|            540|
+|   407000|Single Family|  98058|Renton|           1020|
+|   405000|Single Family|  98058|Renton|            800|
+|   400500|Single Family|  98058|Renton|            900|
+|   400000|Single Family|  98058|Renton|           1030|
+|   400000|Single Family|  98058|Renton|            400|
+|   398000|Single Family|  98058|Renton|            600|
+|   390000|Single Family|  98058|Renton|            420|
+|   389900|Single Family|  98058|Renton|            320|
+|   384300|Single Family|  98058|Renton|           1640|
+|   383700|Single Family|  98058|Renton|            470|
+|   380000|Single Family|  98058|Renton|            600|
+|   380000|Single Family|  98058|Renton|           1000|
+|   380000|Single Family|  98058|Renton|           1000|
+|   380000|Single Family|  98058|Renton|            330|
+|   380000|Single Family|  98058|Renton|            600|
+|   380000|Single Family|  98058|Renton|            500|
++---------+-------------+-------+------+---------------+
+only showing top 20 rows
