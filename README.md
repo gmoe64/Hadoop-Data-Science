@@ -1,2 +1,2 @@
 # Hadoop-Data-Science
-Exercises for manipulate, analyze and perform computations on their Big Data.
+Exercises for manipulating, analyzing and performing computations on Hadoop Big Data.
